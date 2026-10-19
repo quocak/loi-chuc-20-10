@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gửi cậu một chút yêu thương 💗</title>
+<style>
+:root{--pink:#ff5f9e;--deep:#b83280;--cream:#fff7fb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#63304b;background:radial-gradient(circle at top left,#ffe0ed,transparent 40%),linear-gradient(135deg,#fff7fb,#ffe6f0 55%,#fce0ff);overflow-x:hidden}
+main{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;z-index:1}
+.card{width:min(100%,560px);background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.9);border-radius:28px;padding:clamp(24px,6vw,42px);box-shadow:0 20px 60px #c04a7b22;text-align:center;backdrop-filter:blur(10px)}
+.heart{font-size:48px;display:inline-block;animation:pulse 1.3s infinite}
+h1{font-size:clamp(27px,6vw,40px);line-height:1.15;margin:12px 0;color:var(--deep)}
+.subtitle{line-height:1.7;color:#87516d;margin:0 auto 24px;max-width:420px}
+label{display:block;text-align:left;font-weight:700;margin:0 0 8px}
+input{width:100%;padding:15px 16px;border:2px solid #ffd0e2;border-radius:15px;font-size:16px;outline:none;background:#fffafd;color:#63304b}
+input:focus{border-color:var(--pink);box-shadow:0 0 0 4px #ff5f9e20}
+button{border:0;border-radius:999px;padding:14px 22px;background:linear-gradient(100deg,#ff72a9,#d94fa0);color:white;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 8px 20px #e34d902c;transition:transform .2s}
+button:hover{transform:translateY(-2px)}
+#startBtn{width:100%;margin-top:14px}
+.hidden{display:none}
+.message{background:#fff6fb;border:1px solid #ffe0ed;border-radius:18px;padding:17px;margin:12px 0;line-height:1.65;text-align:left;animation:rise .65s both}
+.message:nth-child(2){animation-delay:.12s}.message:nth-child(3){animation-delay:.24s}.message:nth-child(4){animation-delay:.36s}.message:nth-child(5){animation-delay:.48s}.message:nth-child(6){animation-delay:.6s}
+.message b{color:#d83f88}
+#greeting{margin:0 0 18px}
+.small{font-size:13px;color:#a36b88;margin-top:20px}
+.float-heart{position:fixed;bottom:-40px;pointer-events:none;z-index:0;animation:floatUp linear forwards;opacity:.75}
+@keyframes pulse{50%{transform:scale(1.16)}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatUp{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main>
+<section class="card">
+  <div class="heart" aria-hidden="true">💗</div>
+  <div id="entry">
+    <h1>Một món quà nhỏ ngày 20/10</h1>
+    <p class="subtitle">Có một vài lời dễ thương đang chờ được gửi đến cậu. Nhập tên của cậu để mở món quà nhé! 🌷</p>
+    <form id="nameForm">
+      <label for="name">Tên người nhận</label>
+      <input id="name" maxlength="40" autocomplete="given-name" placeholder="Ví dụ: Minh Anh..." required>
+      <button id="startBtn" type="submit">Mở lời chúc 💌</button>
+    </form>
+    <p class="small">Một chút ngọt ngào dành riêng cho ngày đặc biệt ✨</p>
+  </div>
+  <div id="wishes" class="hidden" aria-live="polite">
+    <h1 id="greeting"></h1>
+    <p class="subtitle">Chúc cậu có một ngày 20/10 thật dịu dàng, vui vẻ và ngập tràn yêu thương 🌸</p>
+    <div class="message">🌷 Chúc <b class="person"></b> luôn rạng rỡ, tự tin và gặp thật nhiều điều may mắn.</div>
+    <div class="message">💖 Mong mỗi ngày của <b class="person"></b> đều có lý do để mỉm cười, kể cả những ngày hơi mệt một chút.</div>
+    <div class="message">🧸 Chúc mọi điều tốt đẹp sẽ nhẹ nhàng tìm đến <b class="person"></b>, và những ước mơ nhỏ đều dần thành hiện thực.</div>
+    <div class="message">🌈 Mong <b class="person"></b> luôn được trân trọng, lắng nghe và yêu thương đúng như cách cậu xứng đáng.</div>
+    <div class="message">💌 Nếu hôm nay chưa ai nói điều này, thì hãy nhớ rằng: sự hiện diện của <b class="person"></b> làm thế giới trở nên đáng yêu hơn một chút.</div>
+    <div class="message">💕 Chúc cô gái đặc biệt này có 365 ngày bình an, nhiều tiếng cười và thật nhiều khoảnh khắc đáng nhớ. Happy Vietnamese Women's Day!</div>
+    <button id="againBtn" type="button">Đọc lại lời chúc 💞</button>
+    <p class="small">Gửi đến cậu bằng tất cả sự chân thành 💗</p>
+  </div>
+</section>
+</main>
+<script>
+const form=document.getElementById('nameForm');
+const input=document.getElementById('name');
+const entry=document.getElementById('entry');
+const wishes=document.getElementById('wishes');
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=input.value.trim();
+  if(!name){input.focus();return}
+  document.getElementById('greeting').textContent=`Dành riêng cho ${name} 💖`;
+  document.querySelectorAll('.person').forEach(el=>el.textContent=name);
+  entry.classList.add('hidden');
+  wishes.classList.remove('hidden');
+  for(let i=0;i<12;i++)setTimeout(makeHeart,i*100);
+});
+document.getElementById('againBtn').addEventListener('click',()=>{
+  wishes.classList.add('hidden');entry.classList.remove('hidden');input.focus();
+});
+function makeHeart(){
+  const el=document.createElement('span');
+  el.className='float-heart';
+  el.textContent=['💗','💖','💕','💘','💝','♡'][Math.floor(Math.random()*6)];
+  el.style.left=Math.random()*100+'vw';
+  el.style.fontSize=(16+Math.random()*25)+'px';
+  el.style.animationDuration=(4+Math.random()*5)+'s';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),9500);
+}
+setInterval(()=>{if(Math.random()>.35)makeHeart()},650);
+</script>
+</body>
+</html>
