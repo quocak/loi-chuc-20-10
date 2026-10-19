@@ -30,34 +30,223 @@ button:hover{transform:translateY(-2px)}
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes floatUp{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ===== HIỆU ỨNG MỞ THƯ ===== */
+#letterScene {
+  margin: 22px auto;
+  width: 230px;
+  height: 165px;
+  position: relative;
+  cursor: pointer;
+  perspective: 800px;
+  outline: none;
+}
+
+.envelope {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+  background: #ff8db8;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px #d94f8030;
+}
+
+.envelope::before,
+.envelope::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+}
+
+.envelope::before {
+  background: #ffb5d0;
+  clip-path: polygon(0 0, 50% 60%, 100% 0);
+  z-index: 4;
+}
+
+.envelope::after {
+  background: #ff72a9;
+  clip-path: polygon(0 100%, 0 0, 50% 55%, 100% 0, 100% 100%);
+  z-index: 3;
+}
+
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 85px;
+  background: #ff5f9e;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform .8s ease;
+  z-index: 5;
+}
+
+.letter {
+  position: absolute;
+  left: 10%;
+  bottom: 10px;
+  width: 80%;
+  height: 105px;
+  background: #fffafd;
+  border: 2px solid #ffd0e2;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  box-shadow: 0 3px 12px #b8328020;
+  transition: transform 1s ease, opacity .5s ease;
+  z-index: 2;
+}
+
+.seal {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: #d83f88;
+  border: 3px solid #fff0f6;
+  border-radius: 50%;
+  font-size: 23px;
+  z-index: 6;
+  transition: opacity .3s ease;
+}
+
+#letterScene.open .flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+#letterScene.open .letter {
+  transform: translateY(-95px);
+  z-index: 4;
+}
+
+#letterScene.open .seal {
+  opacity: 0;
+}
+
+#letterScene.open {
+  animation: envelopeBounce .8s ease;
+}
+
+#openHint {
+  margin: 8px 0 18px;
+  color: #b83280;
+  font-weight: 600;
+  animation: pulse 1.3s infinite;
+}
+
+@keyframes envelopeBounce {
+  50% { transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #letterScene,
+  #letterScene *,
+  #openHint {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
 <main>
 <section class="card">
-  <div class="heart" aria-hidden="true">💗</div>
-  <div id="entry">
-    <h1>Một món quà nhỏ ngày 20/10</h1>
-    <p class="subtitle">Có một vài lời dễ thương đang chờ được gửi đến cậu. Nhập tên của cậu để mở món quà nhé! 🌷</p>
-    <form id="nameForm">
-      <label for="name">Tên người nhận</label>
-      <input id="name" maxlength="40" autocomplete="given-name" placeholder="Ví dụ: Minh Anh..." required>
-      <button id="startBtn" type="submit">Mở lời chúc 💌</button>
-    </form>
-    <p class="small">Một chút ngọt ngào dành riêng cho ngày đặc biệt ✨</p>
+ 
+<div class="heart" aria-hidden="true">💗</div>
+
+<div id="entry">
+  <h1>Một món quà nhỏ ngày 20/10</h1>
+  <p class="subtitle">
+    Có một vài lời dễ thương đang chờ được gửi đến cậu. 🌷
+  </p>
+
+  <form id="nameForm">
+    <label for="name">Mời nhập tên</label>
+    <input id="name" maxlength="40" autocomplete="given-name"
+           placeholder="..." required>
+    <button id="startBtn" type="submit">Mở lời chúc 💌</button>
+  </form>
+
+  <p class="small">
+    Một chút ngọt ngào dành riêng cho ngày đặc biệt ✨
+  </p>
+</div>
+
+<div id="wishes" class="hidden" aria-live="polite">
+  <h1 id="greeting"></h1>
+
+  <p class="subtitle">Một lá thư nhỏ dành riêng cho cậu 💌</p>
+
+  <!-- PHONG THƯ -->
+  <div id="letterScene" role="button" tabindex="0"
+       aria-label="Bấm để mở thư">
+    <div class="envelope">
+      <div class="letter">💌</div>
+      <div class="flap"></div>
+      <div class="seal">♥</div>
+    </div>
   </div>
-  <div id="wishes" class="hidden" aria-live="polite">
-    <h1 id="greeting"></h1>
-    <p class="subtitle">Chúc cậu có một ngày 20/10 thật dịu dàng, vui vẻ và ngập tràn yêu thương 🌸</p>
-    <div class="message">🌷 Chúc <b class="person"></b> luôn rạng rỡ, tự tin và gặp thật nhiều điều may mắn.</div>
-    <div class="message">💖 Mong mỗi ngày của <b class="person"></b> đều có lý do để mỉm cười, kể cả những ngày hơi mệt một chút.</div>
-    <div class="message">🧸 Chúc mọi điều tốt đẹp sẽ nhẹ nhàng tìm đến <b class="person"></b>, và những ước mơ nhỏ đều dần thành hiện thực.</div>
-    <div class="message">🌈 Mong <b class="person"></b> luôn được trân trọng, lắng nghe và yêu thương đúng như cách cậu xứng đáng.</div>
-    <div class="message">💌 Nếu hôm nay chưa ai nói điều này, thì hãy nhớ rằng: sự hiện diện của <b class="person"></b> làm thế giới trở nên đáng yêu hơn một chút.</div>
-    <div class="message">💕 Chúc cô gái đặc biệt này có 365 ngày bình an, nhiều tiếng cười và thật nhiều khoảnh khắc đáng nhớ. Happy Vietnamese Women's Day!</div>
-    <button id="againBtn" type="button">Đọc lại lời chúc 💞</button>
-    <p class="small">Gửi đến cậu bằng tất cả sự chân thành 💗</p>
+
+  <p id="openHint">Chạm vào phong thư để mở nhé 💗</p>
+
+  <!-- LỜI CHÚC: chỉ hiện sau khi mở thư -->
+  <div id="wishContent" class="hidden">
+
+    <p class="subtitle">
+      Chúc cậu có một ngày 20/10 thật dịu dàng,
+      vui vẻ và ngập tràn yêu thương 🌸
+    </p>
+
+    <div class="message">
+      🌷 Chúc <b class="person"></b> luôn rạng rỡ,
+      tự tin và gặp thật nhiều điều may mắn.
+    </div>
+
+    <div class="message">
+      💖 Mong mỗi ngày của <b class="person"></b> đều có
+      lý do để mỉm cười, kể cả những ngày hơi mệt một chút.
+    </div>
+
+    <div class="message">
+      🧸 Chúc mọi điều tốt đẹp sẽ nhẹ nhàng tìm đến
+      <b class="person"></b>, và những ước mơ nhỏ đều dần thành hiện thực.
+    </div>
+
+    <div class="message">
+      🌈 Mong <b class="person"></b> luôn được trân trọng,
+      lắng nghe và yêu thương đúng như cách cậu xứng đáng.
+    </div>
+
+    <div class="message">
+      💌 Nếu hôm nay chưa ai nói điều này, thì hãy nhớ rằng:
+      sự hiện diện của <b class="person"></b> làm thế giới
+      trở nên đáng yêu hơn một chút.
+    </div>
+
+    <div class="message">
+      💕 Chúc cô gái đặc biệt này có 365 ngày bình an,
+      nhiều tiếng cười và thật nhiều khoảnh khắc đáng nhớ.
+      Happy Vietnamese Women's Day!
+    </div>
+
+    <button id="againBtn" type="button">Quay lại 💞</button>
+
+    <p class="small">
+      Gửi đến cậu bằng tất cả sự chân thành 💗
+    </p>
   </div>
+</div>
 </section>
 </main>
 <script>
@@ -89,6 +278,39 @@ function makeHeart(){
   setTimeout(()=>el.remove(),9500);
 }
 setInterval(()=>{if(Math.random()>.35)makeHeart()},650);
+
+const letterScene = document.getElementById('letterScene');
+const wishContent = document.getElementById('wishContent');
+const openHint = document.getElementById('openHint');
+
+function openLetter() {
+  if (!letterScene || !wishContent || !openHint) return;
+  if (letterScene.classList.contains('open')) return;
+
+  letterScene.classList.add('open');
+  openHint.textContent = 'Thư đang mở ra... 💗';
+
+  setTimeout(() => {
+    wishContent.classList.remove('hidden');
+    openHint.classList.add('hidden');
+
+    for (let i = 0; i < 12; i++) {
+      setTimeout(() => {
+        if (typeof makeHeart === 'function') makeHeart();
+      }, i * 100);
+    }
+  }, 1100);
+}
+
+letterScene.addEventListener('click', openLetter);
+
+letterScene.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openLetter();
+  }
+});
+
 </script>
 </body>
 </html>
